@@ -1,0 +1,42 @@
+@import "vendor/materialize";
+
+.responsive-table .image-row{
+  display: block;
+}
+
+.image{
+  width: 250px;
+  margin: 0 auto;
+  display: block;
+}
+
+.image-details{
+  padding-left: 20px;
+}
+
+.image-title{
+  display: block;
+  font-size: 26px;
+  @extend .teal-text;
+  @extend .text-lighten-1;
+  &:hover{
+      @extend .text-accent-4;
+  }
+}
+
+.published-date{
+  display: block;
+  margin: 5px 0;
+}
+
+.img-detail-link{
+  display: inline-block;
+  width: 240px;
+}
+
+.truncate {
+  max-width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
