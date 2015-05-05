@@ -22,12 +22,14 @@ var ProductRow = React.createClass({displayName: "ProductRow",
         
         return (
             React.createElement("tr", {className: "image-row"}, 
-                React.createElement("td", null, React.createElement("img", {className: "image z-depth-1", src: this.props.image.media.m, onClick: this.handleClick.bind(this, this.refs)})), 
-                React.createElement("td", {className: "image-details"}, 
+                React.createElement("td", null, React.createElement("img", {className: "table-image z-depth-1", src: this.props.image.media.m, onClick: this.handleClick.bind(this, this.refs)})), 
+                React.createElement("td", {className: "image-data"}, 
                     React.createElement("span", {className: "image-title truncate", onClick: this.handleClick.bind(this, this.refs)}, this.props.image.title), 
-                    React.createElement("span", {ref: "date", className: "published-date"}, "Published: ", splitDate[0], " at ", splitDate[1]), 
-                    React.createElement("a", {ref: "author", className: "img-author-link", href: "http://www.flickr.com/photos/"+ this.props.image.author_id}, author[1]), 
-                    React.createElement("a", {className: "img-detail-link", href: this.props.image.link}, "View on Flickr")
+                    React.createElement("div", {className: "data-container"}, 
+                        React.createElement("span", {ref: "date", className: "published-date"}, "Published: ", splitDate[0], " at ", splitDate[1]), 
+                        React.createElement("a", {ref: "author", className: "img-author-link left", href: "http://www.flickr.com/photos/"+ this.props.image.author_id}, author[1]), 
+                        React.createElement("a", {className: "img-detail-link", href: this.props.image.link}, "View on Flickr")
+                    )
                 )
             )
         );
@@ -82,7 +84,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
                         //calls handleChange when it detects user input
                         onChange: this.handleChange}
                     ), 
-                    React.createElement("label", {htmlFor: "search"}, "Search")
+                    React.createElement("label", {htmlFor: "search", className: "search"}, "Search")
                 )
             )
         );
@@ -91,26 +93,40 @@ var SearchBar = React.createClass({displayName: "SearchBar",
 
 var ImageDetail = React.createClass({displayName: "ImageDetail",
 
+    // Invoked once after the first render
+    componentDidMount: function() {
+        gapi.plusone.render("g-plusone", {"size": "standard", "href": this.props.selectedImg.link});
+    },
+
     handleBackBtn: function(){
         this.props.goBack();
     },
     
     render: function() {
         return (
-            React.createElement("div", {className: "image-detail"}, 
-                React.createElement("button", {className: "waves-light btn", onClick: this.handleBackBtn}, "Back"), 
-                React.createElement("img", {className: "z-depth-1", src: this.props.selectedImg.media.m}), 
-                React.createElement("div", {className: "image-details"}, 
+            React.createElement("div", {className: "image-view"}, 
+                React.createElement("div", {className: "details"}, 
+                    React.createElement("button", {className: "waves-light btn right", onClick: this.handleBackBtn}, "Back"), 
                     React.createElement("a", {className: "image-title", href: this.props.selectedImg.link}, this.props.selectedImg.title), 
-                    React.createElement("span", {className: "published-date"}, this.props.selectedDate), 
                     React.createElement("a", {href: "http://www.flickr.com/photos/"+ this.props.selectedImg.author_id}, this.props.selectedAuthor), 
-                    React.createElement("span", {className: "tags"}, "Tags: ", this.props.selectedImg.tags), 
-                    React.createElement("p", {className: "description"}, 
-                        "Hey, relax man, I'm a brother shamus. Dolor sit amet, consectetur adipiscing elit praesent. Can we just rent it from you? Ac magna justo pellentesque ac lectus quis elit blandit. Yeah. Roadie for Metallica. Speed of Sound Tour. Fringilla a ut turpis praesent felis ligula, malesuada suscipit malesuada non, ultrices. D'ya have a good sarsaparilla? Non urna sed orci ipsum, placerat id. That is our most modestly priced receptacle. Condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at." + ' ' +
-
-"You're going to enter a world of pain, son. We know that this is your homework. We know you stole a car. Dignissim magna ullamcorper in aliquam sagittis. I know how he likes to present himself; Father's weakness is vanity. Hence the slut. Massa ac tortor ultrices faucibus. Mr. Lebowski asked me to repeat that: Her life is in your hands. Curabitur eu mi sapien, ut ultricies ipsum morbi eget risus."
-                    ), 
-                    React.createElement("div", {className: "g-plusone", "data-href": this.props.selectedImg.media.m})
+                    React.createElement("span", {className: "divider-line"}, "|"), 
+                    React.createElement("span", {className: "published-date"}, this.props.selectedDate), 
+                    React.createElement("div", {id: "g-plusone", className: "google-plus"})
+                ), 
+                React.createElement("img", {className: "detail-image z-depth-1", src: this.props.selectedImg.media.m}), 
+                React.createElement("p", {className: "description"}, 
+                    "Hey, relax man, I'm a brother shamus. Dolor sit amet, consectetur adipiscing elit praesent. Can we just rent it from you?" + ' ' + 
+                    "Ac magna justo pellentesque ac lectus quis elit blandit. Yeah. Roadie for Metallica. Speed of Sound Tour." + ' ' +
+                    "Fringilla a ut turpis praesent felis ligula, malesuada suscipit malesuada non, ultrices." + ' ' + 
+                    "D'ya have a good sarsaparilla? Non urna sed orci ipsum, placerat id. That is our most modestly priced receptacle." + ' ' +
+                    "Condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at.", 
+                    React.createElement("br", null), React.createElement("br", null), 
+                    "You're going to enter a world of pain, son. We know that this is your homework. We know you stole a car." + ' ' + 
+                    "Dignissim magna ullamcorper in aliquam sagittis. I know how he likes to present himself; Father's weakness is vanity." + ' ' + 
+                    "Hence the slut. Massa ac tortor ultrices faucibus. Mr. Lebowski asked me to repeat that: Her life is in your hands." + ' ' + 
+                    "Curabitur eu mi sapien, ut ultricies ipsum morbi eget risus.", 
+                    React.createElement("br", null), React.createElement("br", null), 
+                    React.createElement("span", {className: "tags"}, "Tags: ", this.props.selectedImg.tags)
                 )
             )
         );
@@ -140,7 +156,6 @@ var App = React.createClass({displayName: "App",
             },
             success: function(data) {
                 this.setState({data: data.items});
-                console.log(data);
                 }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());

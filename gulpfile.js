@@ -21,66 +21,63 @@ gulp.task('browser-sync', function() {
 
 // configure the jshint task
 gulp.task('jshint', function() {
-  return gulp.src('./app/src/js/components/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
+    return gulp.src('./app/src/js/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'));
 });
  
 gulp.task('build-js', function () {
-    return gulp.src('./app/src/js/components/jsx/*.jsx')
+    return gulp.src('./app/src/js/jsx/*.jsx')
         .pipe(react())
-        .pipe(gulp.dest('./app/src/js/components'));
+        .pipe(gulp.dest('./app/src/js'));
 });
 
 gulp.task('browserify', function() {
-    return browserify('./app/src/js/components/app.js')
+    return browserify('./app/src/js/app.js')
         .bundle()
-        //Pass desired output filename to vinyl-source-stream
         .pipe(source('bundle.js'))
-        // Start piping stream to tasks!
         .pipe(gulp.dest('./app/src/js/build/'))
         .pipe(reload({stream: true}));
 });
 
 gulp.task('minify-js', function () {
-    gulp.src('./app/src/js/build/bundle.js')
-    .pipe(uglify())
-    .pipe(rename({
-     extname: '.min.js'
-   }))
+    return gulp.src('./app/src/js/build/bundle.js')
+        .pipe(uglify())
+        .pipe(rename({
+            extname: '.min.js'
+    }))
     .pipe(gulp.dest('./app/dist/js'));
 });
 
 gulp.task('build-css', function () {
-    gulp.src('./app/src/css/scss/main.scss')
+    return gulp.src('./app/src/css/scss/main.scss')
         .pipe(sass())
         .pipe(minifyCss())
         .pipe(rename({
-         extname: '.min.css'
-       }))
-        .pipe(gulp.dest('./app/dist/css'))
-        //.pipe(gulp.dest('./app/src/css'))
-        .pipe(reload({stream: true}));
+            extname: '.min.css'
+    }))
+    .pipe(gulp.dest('./app/dist/css'))
+    .pipe(reload({stream: true}));
 });
 
-/*gulp.task('minify-css', function() {
-  return gulp.src('/app/src/css/main.css')
-    .pipe(minifyCss())
-    .pipe(rename({
-     extname: '.min.css'
-   }))
+gulp.task('minify-css', function() {
+    return gulp.src('/app/src/css/main.css')
+        .pipe(minifyCss())
+        .pipe(rename({
+         extname: '.min.css'
+    }))
     .pipe(gulp.dest('./app/dist/css'));
-});*/
+});
 
 
 // configure which files to watch and what tasks to use on file changes
 gulp.task('watch', ['browser-sync'], function() {
-  gulp.watch('./app/src/js/components/jsx/*.jsx', ['build-js']);
-  gulp.watch('./app/src/js/components/*.js', ['jshint']);
-  gulp.watch('./app/src/js/components/*.js', ['browserify']);
- // gulp.watch('./app/src/js/build/bundle.js', ['minify-js']);
-  gulp.watch('./app/src/css/scss/main.scss', ['build-css']);
- // gulp.watch('./app/src/css/main.css', ['minify-css']);
+    gulp.watch('./app/src/js/jsx/*.jsx', ['build-js']);
+    gulp.watch('./app/src/js/*.js', ['jshint']);
+    gulp.watch('./app/src/js/*.js', ['browserify']);
+    gulp.watch('./app/src/js/build/bundle.js', ['minify-js']);
+    gulp.watch('./app/src/css/scss/main.scss', ['build-css']);
+    gulp.watch('./app/src/css/main.css', ['minify-css']);
 });
 
 

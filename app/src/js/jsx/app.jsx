@@ -22,12 +22,14 @@ var ProductRow = React.createClass({
         
         return (
             <tr className="image-row">
-                <td><img className="image z-depth-1" src={this.props.image.media.m} onClick={this.handleClick.bind(this, this.refs)} /></td>
-                <td className="image-details">
+                <td><img className="table-image z-depth-1" src={this.props.image.media.m} onClick={this.handleClick.bind(this, this.refs)} /></td>
+                <td className="image-data">
                     <span className="image-title truncate" onClick={this.handleClick.bind(this, this.refs)}>{this.props.image.title}</span>
-                    <span ref="date" className="published-date">Published: {splitDate[0]} at {splitDate[1]}</span>
-                    <a ref="author" className="img-author-link" href={"http://www.flickr.com/photos/"+ this.props.image.author_id}>{author[1]}</a>
-                    <a className="img-detail-link" href={this.props.image.link}>View on Flickr</a>
+                    <div className="data-container">
+                        <span ref="date" className="published-date">Published: {splitDate[0]} at {splitDate[1]}</span>
+                        <a ref="author" className="img-author-link left" href={"http://www.flickr.com/photos/"+ this.props.image.author_id}>{author[1]}</a>
+                        <a className="img-detail-link" href={this.props.image.link}>View on Flickr</a>
+                    </div>
                 </td>
             </tr>
         );
@@ -82,7 +84,7 @@ var SearchBar = React.createClass({
                         //calls handleChange when it detects user input
                         onChange={this.handleChange}
                     />
-                    <label htmlFor="search">Search</label>
+                    <label htmlFor="search" className="search">Search</label>
                 </div>
             </form>
         );
@@ -91,27 +93,41 @@ var SearchBar = React.createClass({
 
 var ImageDetail = React.createClass({
 
+    // Invoked once after the first render
+    componentDidMount: function() {
+        gapi.plusone.render("g-plusone", {"size": "standard", "href": this.props.selectedImg.link});
+    },
+
     handleBackBtn: function(){
         this.props.goBack();
     },
     
     render: function() {
         return (
-            <div className="image-detail">
-                <button className="waves-light btn" onClick={this.handleBackBtn}>Back</button>
-                <img className="z-depth-1" src={this.props.selectedImg.media.m}/>
-                <div className="image-details">
+            <div className="image-view">
+                <div className='details'>
+                    <button className="waves-light btn right" onClick={this.handleBackBtn}>Back</button>
                     <a className="image-title" href={this.props.selectedImg.link}>{this.props.selectedImg.title}</a>
+                    <a href={"http://www.flickr.com/photos/"+ this.props.selectedImg.author_id}>{this.props.selectedAuthor}</a> 
+                    <span className = "divider-line">|</span>
                     <span className="published-date">{this.props.selectedDate}</span>
-                    <a href={"http://www.flickr.com/photos/"+ this.props.selectedImg.author_id}>{this.props.selectedAuthor}</a>
-                    <span className="tags">Tags: {this.props.selectedImg.tags}</span>
-                    <p className="description">
-                        Hey, relax man, I'm a brother shamus. Dolor sit amet, consectetur adipiscing elit praesent. Can we just rent it from you? Ac magna justo pellentesque ac lectus quis elit blandit. Yeah. Roadie for Metallica. Speed of Sound Tour. Fringilla a ut turpis praesent felis ligula, malesuada suscipit malesuada non, ultrices. D'ya have a good sarsaparilla? Non urna sed orci ipsum, placerat id. That is our most modestly priced receptacle. Condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at.
-
-You're going to enter a world of pain, son. We know that this is your homework. We know you stole a car. Dignissim magna ullamcorper in aliquam sagittis. I know how he likes to present himself; Father's weakness is vanity. Hence the slut. Massa ac tortor ultrices faucibus. Mr. Lebowski asked me to repeat that: Her life is in your hands. Curabitur eu mi sapien, ut ultricies ipsum morbi eget risus.
-                    </p>
-                    <div className="g-plusone" data-href={this.props.selectedImg.media.m}></div>
+                    <div id="g-plusone" className="google-plus"></div>
                 </div>
+                <img className="detail-image z-depth-1" src={this.props.selectedImg.media.m}/>
+                <p className="description">
+                    Hey, relax man, I'm a brother shamus. Dolor sit amet, consectetur adipiscing elit praesent. Can we just rent it from you? 
+                    Ac magna justo pellentesque ac lectus quis elit blandit. Yeah. Roadie for Metallica. Speed of Sound Tour.
+                    Fringilla a ut turpis praesent felis ligula, malesuada suscipit malesuada non, ultrices. 
+                    D'ya have a good sarsaparilla? Non urna sed orci ipsum, placerat id. That is our most modestly priced receptacle.
+                    Condimentum rutrum, rhoncus ac lorem aliquam placerat posuere neque, at.
+                    <br/><br/>
+                    You're going to enter a world of pain, son. We know that this is your homework. We know you stole a car. 
+                    Dignissim magna ullamcorper in aliquam sagittis. I know how he likes to present himself; Father's weakness is vanity. 
+                    Hence the slut. Massa ac tortor ultrices faucibus. Mr. Lebowski asked me to repeat that: Her life is in your hands. 
+                    Curabitur eu mi sapien, ut ultricies ipsum morbi eget risus.
+                    <br/><br/>
+                    <span className="tags">Tags: {this.props.selectedImg.tags}</span>
+                </p>
             </div>
         );
     }
@@ -140,7 +156,6 @@ var App = React.createClass({
             },
             success: function(data) {
                 this.setState({data: data.items});
-                console.log(data);
                 }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
