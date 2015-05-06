@@ -57,11 +57,6 @@ img{
 .published-date{
   display: block;
   margin-bottom: 5px;
-  @media (min-width: $upper-medium-screen){
-    display: inline-block;
-    position: relative;
-    margin: 0 40px;
-  }
 }
 
 .img-detail-link{
