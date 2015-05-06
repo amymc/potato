@@ -1,6 +1,6 @@
 # potato
 
-**stuff used**
+**stuff used**  
 react.js  
 gulp  
 browserify  
